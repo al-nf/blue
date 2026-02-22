@@ -1,3 +1,2 @@
 CompileFlags:
-  Add:
-    - "-IC:/Users/alanf/SDL3-3.4.0/include"
+  CompilationDatabase: build
