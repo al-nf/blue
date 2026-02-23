@@ -21,4 +21,10 @@ static inline vec2 scale(vec2 v, float s) {
 static inline float dot(vec2 a, vec2 b) {
     return a.x * b.x + a.y * b.y;
 }
+
+static inline void swap(vec2* a, vec2* b) {
+    vec2 temp = *a;
+    *a = *b;
+    *b = temp;
+}
 #endif // VEC_H

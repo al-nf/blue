@@ -35,5 +35,63 @@ void fb_draw_tri_wire(Framebuffer* fb, vec2 a, vec2 b, vec2 c, u32 color) {
 }
 
 void fb_draw_tri(Framebuffer* fb, vec2 a, vec2 b, vec2 c, u32 color) {
-    // TODO: implement triangle rasterization
+    if (a.y > b.y) swap(&a, &b);
+    if (a.y > c.y) swap(&a, &c);
+    if (b.y > c.y) swap(&b, &c);
+
+    if (a.y == b.y) { // flat top
+        float invslope1 = (c.x - a.x) / (c.y - a.y);
+        float invslope2 = (c.x - b.x) / (c.y - b.y);
+
+        float curx1 = c.x;
+        float curx2 = c.x;
+
+        for (int scanlineY = c.y; scanlineY > a.y; --scanlineY) {
+            fb_draw_line(fb, (int)curx1, scanlineY, (int)curx2, scanlineY, color);
+            curx1 -= invslope1;
+            curx2 -= invslope2;
+        }
+
+    } else if (b.y == c.y) { // flat bottom
+        float invslope1 = (b.x - a.x) / (b.y - a.y);
+        float invslope2 = (c.x - a.x) / (c.y - a.y);
+
+        float curx1 = a.x;
+        float curx2 = a.x;
+
+        for (int scanlineY = a.y; scanlineY <= b.y; ++scanlineY) {
+            fb_draw_line(fb, (int)curx1, scanlineY, (int)curx2, scanlineY, color);
+            curx1 += invslope1;
+            curx2 += invslope2;
+        }
+
+    } else { // general case - split the triangle in twain
+        vec2 d = {(int)(a.x + (float)(b.y - a.y) / (float)(c.y - a.y)*(c.x - a.x)), b.y};
+
+        // flat bottom part
+        float invslope1 = (b.x - a.x) / (b.y - a.y);
+        float invslope2 = (d.x - a.x) / (d.y - a.y);
+
+        float curx1 = a.x;
+        float curx2 = a.x;
+
+        for (int scanlineY = a.y; scanlineY <= b.y; ++scanlineY) {
+            fb_draw_line(fb, (int)curx1, scanlineY, (int)curx2, scanlineY, color);
+            curx1 += invslope1;
+            curx2 += invslope2;
+        }
+
+        // flat top part
+        invslope1 = (c.x - b.x) / (c.y - b.y);
+        invslope2 = (c.x - d.x) / (c.y - d.y);
+
+        curx1 = c.x;
+        curx2 = c.x;
+
+        for (int scanlineY = c.y; scanlineY > b.y; --scanlineY) {
+            fb_draw_line(fb, (int)curx1, scanlineY, (int)curx2, scanlineY, color);
+            curx1 -= invslope1;
+            curx2 -= invslope2;
+        }
+    }
 }
