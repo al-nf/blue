@@ -29,5 +29,11 @@ void fb_draw_line(Framebuffer* fb, int x0, int y0, int x1, int y1, u32 color) {
 }
 
 void fb_draw_tri_wire(Framebuffer* fb, vec2 a, vec2 b, vec2 c, u32 color) {
+    fb_draw_line(fb, a.x, a.y, b.x, b.y, color);
+    fb_draw_line(fb, b.x, b.y, c.x, c.y, color);
+    fb_draw_line(fb, c.x, c.y, a.x, a.y, color);
+}
 
+void fb_draw_tri(Framebuffer* fb, vec2 a, vec2 b, vec2 c, u32 color) {
+    // TODO: implement triangle rasterization
 }
