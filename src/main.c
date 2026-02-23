@@ -50,9 +50,14 @@ int main() {
         SDL_UpdateTexture(
             tex,
             NULL,
-            fb,
+            fb->pixels,
             WIDTH * sizeof(u32)
         );
+        
+        SDL_RenderClear(ren);
+        SDL_RenderTexture(ren, tex, NULL, NULL);
+        SDL_RenderPresent(ren);
+        
         SDL_PollEvent(&event);
         if (event.type == SDL_EVENT_QUIT) {
             running = false;
