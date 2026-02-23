@@ -22,9 +22,51 @@ void fb_put_pixel(Framebuffer* fb, int x, int y, u32 color) {
 }
 
 void fb_draw_line(Framebuffer* fb, int x0, int y0, int x1, int y1, u32 color) {
-    for (int x = x0; x <= x1; ++x) {
-        int y = (y1-y0)*(x-x0)/(x1-x0) + y0;
-        fb_put_pixel(fb, x, y, color);
+    int dx = abs(x1 - x0);
+    int dy = abs(y1 - y0);
+    int xi = (x0 < x1) ? 1 : -1;
+    int yi = (y0 < y1) ? 1 : -1;
+    int steep = dy > dx;
+    int D, x, y;
+
+    if (steep) { // step along y
+        if (y0 > y1) { // swap to go top to bottom
+            int tmp;
+            tmp = x0; x0 = x1; x1 = tmp;
+            tmp = y0; y0 = y1; y1 = tmp;
+            xi = -xi;
+            yi = -yi;
+        }
+        D = 2*dx - dy;
+        x = x0;
+        for (y = y0; y <= y1; ++y) {
+            fb_put_pixel(fb, x, y, color);
+            if (D > 0) {
+                x += xi;
+                D += 2*(dx - dy);
+            } else {
+                D += 2*dx;
+            }
+        }
+    } else { // step along x
+        if (x0 > x1) { // swap to go left to right
+            int tmp;
+            tmp = x0; x0 = x1; x1 = tmp;
+            tmp = y0; y0 = y1; y1 = tmp;
+            xi = -xi;
+            yi = -yi;
+        }
+        D = 2*dy - dx;
+        y = y0;
+        for (x = x0; x <= x1; ++x) {
+            fb_put_pixel(fb, x, y, color);
+            if (D > 0) {
+                y += yi;
+                D += 2*(dy - dx);
+            } else {
+                D += 2*dy;
+            }
+        }
     }
 }
 
