@@ -6,7 +6,7 @@
 - [x] Fix line drawing algorithm (current version has issues with steep slopes)
   - [x] Implement proper Bresenham's line algorithm
   - [x] Handle all octants correctly
-- [ ] Add circle drawing (Midpoint Circle Algorithm)
+- [x] Add circle drawing (Midpoint Circle Algorithm)
 - [ ] Add rectangle drawing (filled and wireframe)
 - [ ] Add polygon drawing (arbitrary n-gons)
 
