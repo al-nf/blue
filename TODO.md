@@ -7,7 +7,7 @@
   - [x] Implement proper Bresenham's line algorithm
   - [x] Handle all octants correctly
 - [x] Add circle drawing (Midpoint Circle Algorithm)
-- [ ] Add rectangle drawing (filled and wireframe)
+- [x] Add rectangle drawing (filled and wireframe)
 - [ ] Add polygon drawing (arbitrary n-gons)
 
 ### Triangle Rasterizer Improvements
