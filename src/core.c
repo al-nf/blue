@@ -15,9 +15,11 @@ void fb_clear(Framebuffer* fb, u32 color) {
 }
 
 void fb_put_pixel(Framebuffer* fb, int x, int y, u32 color) {
-    if (x < 0 || x >= fb->width || y < 0 || y >= fb->height) {
+    #ifndef NDEBUG
+    if (x < 0 || x >= fb->width || y < 0 || y >= fb->height) { // feel bad for the branch predictor
         return;
     }
+    #endif
     fb->pixels[(y * fb->width) + x] = color;
 }
 
@@ -156,6 +158,35 @@ void fb_draw_cir_wire(Framebuffer* fb, int cx, int cy, int r, u32 color) {
         fb_put_pixel(fb, cx - y, cy + x, color);
         fb_put_pixel(fb, cx + y, cy - x, color);
         fb_put_pixel(fb, cx - y, cy - x, color);
+
+        if (E < 0) {
+            E += 4*y + 6;
+        } else {
+            E += 4*(y - x) + 10;
+            --x;
+        }
+        ++y;
+    }
+}
+
+void fb_draw_cir(Framebuffer* fb, int cx, int cy, int r, u32 color) {
+    if (r <= 0) {
+        fb_put_pixel(fb, cx, cy, color);
+        return;
+    }
+    int x = r;
+    int y = 0;
+    int E = 3 - 2*r;
+
+    while (x >= y) {
+        for (int i = cx - x; i <= cx + x; ++i) {
+            fb_put_pixel(fb, i, cy + y, color);
+            fb_put_pixel(fb, i, cy - y, color);
+        }
+        for (int i = cx - y; i <= cx + y; ++i) {
+            fb_put_pixel(fb, i, cy + x, color);
+            fb_put_pixel(fb, i, cy - x, color);
+        }
 
         if (E < 0) {
             E += 4*y + 6;
