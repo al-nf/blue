@@ -197,3 +197,33 @@ void fb_draw_cir(Framebuffer* fb, int cx, int cy, int r, u32 color) {
         ++y;
     }
 }
+
+void fb_draw_rect_wire(Framebuffer* fb, int x, int y, int w, int h, u32 color) {
+    #ifndef NDEBUG
+    if (w <= 0 || h <= 0) return;
+    if (x < 0) { w += x; x = 0; }
+    if (y < 0) { h += y; y = 0; }
+    #endif
+    u32* top = &fb->pixels[y * fb->width + x];
+    u32* bot = &fb->pixels[(y + h - 1) * fb->width + x];
+    for (int i = 0; i < w; ++i) top[i] = bot[i] = color;
+
+    for (int j = y + 1; j < y + h - 1; ++j) {
+        fb->pixels[j * fb->width + x] = color;
+        fb->pixels[j * fb->width + x + w - 1] = color;
+    }
+}
+
+void fb_draw_rect(Framebuffer* fb, int x, int y, int w, int h, u32 color) {
+    #ifndef NDEBUG
+    if (w <= 0 || h <= 0) return;
+    if (x < 0) { w += x; x = 0; }
+    if (y < 0) { h += y; y = 0; }
+    #endif
+
+    for (int j = y; j < y + h; ++j) {
+        u32* row = &fb->pixels[j * fb->width + x];
+        for (int i = 0; i < w; ++i)
+            row[i] = color;
+    }
+}
