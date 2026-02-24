@@ -41,3 +41,11 @@ executable(
   dependencies: extra_deps,
   link_args: extra_link_args,
 )
+
+executable(
+  'simpletest',
+  ['src/core.c', 'src/platform.c', 'src/test.c'],
+  include_directories: [inc_local] + extra_includes,
+  dependencies: extra_deps,
+  link_args: extra_link_args,
+)
