@@ -137,3 +137,32 @@ void fb_draw_tri(Framebuffer* fb, vec2 a, vec2 b, vec2 c, u32 color) {
         }
     }
 }
+
+void fb_draw_cir_wire(Framebuffer* fb, int cx, int cy, int r, u32 color) {
+    if (r <= 0) {
+        fb_put_pixel(fb, cx, cy, color);
+        return;
+    }
+    int x = r;
+    int y = 0;
+    int E = 3 - 2*r;
+
+    while (x >= y) {
+        fb_put_pixel(fb, cx + x, cy + y, color);
+        fb_put_pixel(fb, cx - x, cy + y, color);
+        fb_put_pixel(fb, cx + x, cy - y, color);
+        fb_put_pixel(fb, cx - x, cy - y, color);
+        fb_put_pixel(fb, cx + y, cy + x, color);
+        fb_put_pixel(fb, cx - y, cy + x, color);
+        fb_put_pixel(fb, cx + y, cy - x, color);
+        fb_put_pixel(fb, cx - y, cy - x, color);
+
+        if (E < 0) {
+            E += 4*y + 6;
+        } else {
+            E += 4*(y - x) + 10;
+            --x;
+        }
+        ++y;
+    }
+}
