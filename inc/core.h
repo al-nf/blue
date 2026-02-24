@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <math.h>
 #include "vec.h"
 #define u32 uint32_t
 

@@ -91,7 +91,8 @@ void fb_draw_tri(Framebuffer* fb, vec2 a, vec2 b, vec2 c, u32 color) {
         float curx2 = c.x;
 
         for (int scanlineY = c.y; scanlineY > a.y; --scanlineY) {
-            int x0 = (int)curx1, x1 = (int)curx2;
+            int x0 = (int)ceilf(curx1);
+            int x1 = (int)ceilf(curx2) - 1;
             if (x0 > x1) { int tmp = x0; x0 = x1; x1 = tmp; }
             u32* row = &fb->pixels[scanlineY * fb->width + x0];
             for (int i = 0; i <= x1 - x0; ++i) row[i] = color;
@@ -107,7 +108,8 @@ void fb_draw_tri(Framebuffer* fb, vec2 a, vec2 b, vec2 c, u32 color) {
         float curx2 = a.x;
 
         for (int scanlineY = a.y; scanlineY <= b.y; ++scanlineY) {
-            int x0 = (int)curx1, x1 = (int)curx2;
+            int x0 = (int)ceilf(curx1);
+            int x1 = (int)ceilf(curx2) - 1;
             if (x0 > x1) { int tmp = x0; x0 = x1; x1 = tmp; }
             u32* row = &fb->pixels[scanlineY * fb->width + x0];
             for (int i = 0; i <= x1 - x0; ++i) row[i] = color;
@@ -126,7 +128,11 @@ void fb_draw_tri(Framebuffer* fb, vec2 a, vec2 b, vec2 c, u32 color) {
         float curx2 = a.x;
 
         for (int scanlineY = a.y; scanlineY <= b.y; ++scanlineY) {
-            fb_draw_line(fb, (int)curx1, scanlineY, (int)curx2, scanlineY, color);
+            int x0 = (int)ceilf(curx1);
+            int x1 = (int)ceilf(curx2) - 1;
+            if (x0 > x1) { int tmp = x0; x0 = x1; x1 = tmp; }
+            u32* row = &fb->pixels[scanlineY * fb->width + x0];
+            for (int i = 0; i <= x1 - x0; ++i) row[i] = color;
             curx1 += invslope1;
             curx2 += invslope2;
         }
@@ -139,7 +145,11 @@ void fb_draw_tri(Framebuffer* fb, vec2 a, vec2 b, vec2 c, u32 color) {
         curx2 = c.x;
 
         for (int scanlineY = c.y; scanlineY > b.y; --scanlineY) {
-            fb_draw_line(fb, (int)curx1, scanlineY, (int)curx2, scanlineY, color);
+            int x0 = (int)ceilf(curx1);
+            int x1 = (int)ceilf(curx2) - 1;
+            if (x0 > x1) { int tmp = x0; x0 = x1; x1 = tmp; }
+            u32* row = &fb->pixels[scanlineY * fb->width + x0];
+            for (int i = 0; i <= x1 - x0; ++i) row[i] = color;
             curx1 -= invslope1;
             curx2 -= invslope2;
         }
