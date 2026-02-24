@@ -209,7 +209,7 @@ void fb_draw_rect_wire(Framebuffer* fb, int x, int y, int w, int h, u32 color) {
     for (int i = 0; i < w; ++i) top[i] = bot[i] = color;
 
     for (int j = y + 1; j < y + h - 1; ++j) {
-        fb->pixels[j * fb->width + x]         = color;
+        fb->pixels[j * fb->width + x] = color;
         fb->pixels[j * fb->width + x + w - 1] = color;
     }
 }
