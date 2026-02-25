@@ -91,9 +91,25 @@ void fb_draw_tri(Framebuffer* fb, vec2 a, vec2 b, vec2 c, u32 color) {
         float curx2 = c.x;
 
         for (int scanlineY = c.y; scanlineY > a.y; --scanlineY) {
+            #ifndef NDEBUG
+            if (scanlineY < 0 || scanlineY >= fb->height) {
+                curx1 -= invslope1;
+                curx2 -= invslope2;
+                continue;
+            }
+            #endif
             int x0 = (int)ceilf(curx1);
             int x1 = (int)ceilf(curx2) - 1;
             if (x0 > x1) { int tmp = x0; x0 = x1; x1 = tmp; }
+            #ifndef NDEBUG
+            if (x1 < 0 || x0 >= fb->width) {
+                curx1 -= invslope1;
+                curx2 -= invslope2;
+                continue;
+            }
+            if (x0 < 0) x0 = 0;
+            if (x1 >= fb->width) x1 = fb->width - 1;
+            #endif
             u32* row = &fb->pixels[scanlineY * fb->width + x0];
             for (int i = 0; i <= x1 - x0; ++i) row[i] = color;
             curx1 -= invslope1;
@@ -108,9 +124,25 @@ void fb_draw_tri(Framebuffer* fb, vec2 a, vec2 b, vec2 c, u32 color) {
         float curx2 = a.x;
 
         for (int scanlineY = a.y; scanlineY <= b.y; ++scanlineY) {
+            #ifndef NDEBUG
+            if (scanlineY < 0 || scanlineY >= fb->height) {
+                curx1 += invslope1;
+                curx2 += invslope2;
+                continue;
+            }
+            #endif
             int x0 = (int)ceilf(curx1);
             int x1 = (int)ceilf(curx2) - 1;
             if (x0 > x1) { int tmp = x0; x0 = x1; x1 = tmp; }
+            #ifndef NDEBUG
+            if (x1 < 0 || x0 >= fb->width) {
+                curx1 += invslope1;
+                curx2 += invslope2;
+                continue;
+            }
+            if (x0 < 0) x0 = 0;
+            if (x1 >= fb->width) x1 = fb->width - 1;
+            #endif
             u32* row = &fb->pixels[scanlineY * fb->width + x0];
             for (int i = 0; i <= x1 - x0; ++i) row[i] = color;
             curx1 += invslope1;
@@ -118,7 +150,7 @@ void fb_draw_tri(Framebuffer* fb, vec2 a, vec2 b, vec2 c, u32 color) {
         }
 
     } else { // general case - split the triangle in twain
-        vec2 d = {(int)(a.x + (float)(b.y - a.y) / (float)(c.y - a.y)*(c.x - a.x)), b.y};
+        vec2 d = {a.x + (float)(b.y - a.y) / (float)(c.y - a.y)*(c.x - a.x), b.y};
 
         // flat bottom part
         float invslope1 = (b.x - a.x) / (b.y - a.y);
@@ -128,9 +160,25 @@ void fb_draw_tri(Framebuffer* fb, vec2 a, vec2 b, vec2 c, u32 color) {
         float curx2 = a.x;
 
         for (int scanlineY = a.y; scanlineY <= b.y; ++scanlineY) {
+            #ifndef NDEBUG
+            if (scanlineY < 0 || scanlineY >= fb->height) {
+                curx1 += invslope1;
+                curx2 += invslope2;
+                continue;
+            }
+            #endif
             int x0 = (int)ceilf(curx1);
             int x1 = (int)ceilf(curx2) - 1;
             if (x0 > x1) { int tmp = x0; x0 = x1; x1 = tmp; }
+            #ifndef NDEBUG
+            if (x1 < 0 || x0 >= fb->width) {
+                curx1 += invslope1;
+                curx2 += invslope2;
+                continue;
+            }
+            if (x0 < 0) x0 = 0;
+            if (x1 >= fb->width) x1 = fb->width - 1;
+            #endif
             u32* row = &fb->pixels[scanlineY * fb->width + x0];
             for (int i = 0; i <= x1 - x0; ++i) row[i] = color;
             curx1 += invslope1;
@@ -145,9 +193,25 @@ void fb_draw_tri(Framebuffer* fb, vec2 a, vec2 b, vec2 c, u32 color) {
         curx2 = c.x;
 
         for (int scanlineY = c.y; scanlineY > b.y; --scanlineY) {
+            #ifndef NDEBUG
+            if (scanlineY < 0 || scanlineY >= fb->height) {
+                curx1 -= invslope1;
+                curx2 -= invslope2;
+                continue;
+            }
+            #endif
             int x0 = (int)ceilf(curx1);
             int x1 = (int)ceilf(curx2) - 1;
             if (x0 > x1) { int tmp = x0; x0 = x1; x1 = tmp; }
+            #ifndef NDEBUG
+            if (x1 < 0 || x0 >= fb->width) {
+                curx1 -= invslope1;
+                curx2 -= invslope2;
+                continue;
+            }
+            if (x0 < 0) x0 = 0;
+            if (x1 >= fb->width) x1 = fb->width - 1;
+            #endif
             u32* row = &fb->pixels[scanlineY * fb->width + x0];
             for (int i = 0; i <= x1 - x0; ++i) row[i] = color;
             curx1 -= invslope1;
